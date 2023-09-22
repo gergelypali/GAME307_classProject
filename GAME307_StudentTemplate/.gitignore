@@ -10,9 +10,10 @@
 main
 
 # User-specific files
+*.user
+!*.user
 *.rsuser
 *.suo
-*.user
 *.userosscache
 *.sln.docstates
 
