@@ -40,7 +40,14 @@ kinematicSteeringOutput KinematicBehaviour::kinematicWander(Body* targetBody, Bo
 		charBody->setVel(MATH::VMath::normalize(targetBody->getPos() - charBody->getPos()) * charBody->getMaxSpeed());
 		charBody->setOrientation(changeOrientation(charBody->getOrientation(), charBody->getVel()));
 	}
-	return kinematicSteeringOutput{ MATH::Vec3( sinf(charBody->getOrientation() * M_PI / 180.0f), cosf(charBody->getOrientation() * M_PI / 180.0f), 0 ) * charBody->getMaxSpeed(), normalDistribution(generator) * charBody->getMaxRotation() };
+
+	return kinematicSteeringOutput{
+		MATH::Vec3( sinf(charBody->getOrientation() * M_PI / 180.0f),
+			cosf(charBody->getOrientation() * M_PI / 180.0f),
+			0 )
+		* charBody->getMaxSpeed(),
+		normalDistribution(generator) * charBody->getMaxRotation()
+	};
 }
 
 kinematicSteeringOutput KinematicBehaviour::kinematicPursue(Body* targetBody, Body* charBody)

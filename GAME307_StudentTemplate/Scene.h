@@ -5,8 +5,12 @@
 #include <SDL_image.h>
 #include <MMath.h>
 #include "GameManager.h"
+#include <vector>
 
 using namespace MATH;
+
+class NPCInterface;
+class Obstacle;
 
 class Scene {
 public:
@@ -23,6 +27,8 @@ public:
     virtual Matrix4 getProjectionMatrix() = 0;
 	virtual Matrix4 getInverseMatrix() = 0;
 	virtual SDL_Renderer* getRenderer() = 0;
+	virtual std::vector<NPCInterface*> getNPCVector() = 0;
+	virtual std::vector<Obstacle*> getObstacleVector() = 0;
 };
 
 #endif

@@ -7,26 +7,35 @@
 #include <SDL_image.h>
 #include "Behaviour.h"
 
+class NPCInterface
+{
+public:
+	virtual void Update(float deltaTime) = 0;
+	virtual void Render() = 0;
+	Body* m_body{ nullptr };
+
+};
+
 template <class T>
-class NPC
+class NPC : public NPCInterface
 {
 private:
 	SDL_Texture* m_texture{ nullptr };
 	float m_scale{ 1.0f };
 
 protected:
-	Scene* m_currentScene{ nullptr };
-	Body* m_body{ nullptr };
 	T* m_behaviour{ nullptr };
+	Scene* m_currentScene{ nullptr };
 
 public:
 	NPC(Scene* currentScene, Body* body, SDL_Texture* texture, float scale, T* behaviour) :
 		m_currentScene(currentScene),
-		m_body(body),
 		m_texture(texture),
 		m_scale(scale),
 		m_behaviour(behaviour)
-	{};
+	{
+		m_body = body;
+	};
 	~NPC()
 	{
 		if (m_body)
@@ -35,7 +44,6 @@ public:
 			delete m_behaviour;
 	};
 
-	virtual void Update(float deltaTime) = 0;
 	void Render()
 	{
 		SDL_Renderer* renderer = m_currentScene->getRenderer();

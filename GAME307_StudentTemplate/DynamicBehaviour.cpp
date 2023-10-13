@@ -86,3 +86,117 @@ dynamicSteeringOutput DynamicBehaviour::dynamicPursue(Body* targetBody, Body* ch
 
 	return dynamicArrive(fakeTarget.get(), charBody);
 }
+
+dynamicSteeringOutput DynamicBehaviour::dynamicFace(Body* targetBody, Body* charBody)
+{
+	// this is kinda wrong here, when we are at the ends, either +PI or -PI
+	// the next frame will go to the opposite end +PI->-PI -PI->+PI
+	// an the NPC will do a 360 because the acceleration will move the
+	// characters orientation to the other end
+	dynamicSteeringOutput res{ MATH::Vec3{}, 0 };
+
+	auto fakeTarget = std::make_unique<Body>(*targetBody);
+	auto direction{ fakeTarget->getPos() - charBody->getPos() };
+	if (MATH::VMath::mag(direction) == 0)
+	{
+		return res;
+	}
+	fakeTarget->setOrientation(atan2f(direction.x, direction.y) * 180.0f / M_PI);
+	res = dynamicAlign(fakeTarget.get(), charBody);
+
+	return res;
+}
+
+dynamicSteeringOutput DynamicBehaviour::dynamicLookWhereYoureGoing(Body* targetBody, Body* charBody)
+{
+	dynamicSteeringOutput res{ MATH::Vec3{}, 0 };
+
+	auto charVel{ charBody->getVel() };
+	if (MATH::VMath::mag(charVel) == 0)
+	{
+		return res;
+	}
+
+	auto fakeTarget = std::make_unique<Body>(*targetBody);
+	fakeTarget->setOrientation(atan2f(charVel.x, charVel.y) * 180.0f / M_PI);
+	res = dynamicAlign(fakeTarget.get(), charBody);
+
+	return res;
+}
+
+dynamicSteeringOutput DynamicBehaviour::dynamicWander(Body* targetBody, Body* charBody)
+{
+	dynamicSteeringOutput res{ MATH::Vec3{}, 0 };
+
+	float wanderOrientation{ 0 };
+	wanderOrientation += normalDistribution(generator) * 90.0f;
+	auto targetOrientation = wanderOrientation + charBody->getOrientation();
+
+	MATH::Vec3 target{ charBody->getPos() + 10.0f * MATH::Vec3(sinf(charBody->getOrientation() * M_PI / 180.0f), cosf(charBody->getOrientation() * M_PI / 180.0f), 0) };
+	target += 10.0f * MATH::Vec3(sinf(targetOrientation * M_PI / 180.0f), cosf(targetOrientation * M_PI / 180.0f), 0);
+
+	auto fakeTarget = std::make_unique<Body>(*targetBody);
+	fakeTarget->setPos(target);
+	res = dynamicFace(fakeTarget.get(), charBody);
+	res.acceleration = MATH::VMath::normalize(MATH::Vec3(sinf(charBody->getOrientation() * M_PI / 180.0f), cosf(charBody->getOrientation() * M_PI / 180.0f), 0)) * charBody->getMaxAcceleration();
+
+	return res;
+}
+
+dynamicSteeringOutput DynamicBehaviour::dynamicSeparation(std::vector<NPCInterface*> npcVector, Body* charBody)
+{
+	dynamicSteeringOutput res{ MATH::Vec3{}, 0 };
+
+	float threshold{ 50.f };
+	float decayCoeff{ 1.f };
+
+	for (auto npc : npcVector)
+	{
+		auto direction{ npc->m_body->getPos() - charBody->getPos() };
+		// check if this is us, so we can skip the rest of the for loop
+		if (direction.x == 0 && direction.y == 0)
+			continue;
+		float distance{ VMath::mag(direction) };
+		if (distance < threshold)
+		{
+			float strength{ charBody->getMaxAcceleration() };
+			res.acceleration -= strength * VMath::normalize(direction);
+		}
+	}
+
+	return res;
+}
+
+dynamicSteeringOutput DynamicBehaviour::dynamicObstacleAvoidance(std::vector<Obstacle*> obstacleVector, Body* charBody)
+{
+	dynamicSteeringOutput res{ MATH::Vec3{}, 0 };
+
+	float avoidDistance{ 50.f };
+	float lookAhead{ 75.f };
+	float objectDistance{ lookAhead };
+	collisionData finalData{};
+
+	// create a ray for checking the collisions
+	if (charBody->getVel().x == 0 && charBody->getVel().y == 0)
+		return res;
+
+	auto ray{ VMath::normalize(charBody->getVel()) * lookAhead };
+
+	// do the collision check with every other obstacle
+	for (auto &oneO : obstacleVector)
+	{
+		auto resColl = oneO->GetCollision(charBody->getPos(), ray);
+		if (objectDistance > VMath::mag(resColl.position - charBody->getPos()))
+		{
+			objectDistance = VMath::mag(resColl.position - charBody->getPos());
+			finalData = resColl;
+		}
+	}
+	// if there is no collision point inside the lookahead, just skip the rest
+	if (objectDistance == lookAhead)
+		return res;
+
+	auto fakeTarget = std::make_unique<Body>();
+	fakeTarget->setPos(finalData.position + finalData.normal * avoidDistance);
+	return dynamicSeek(fakeTarget.get(), charBody);
+}

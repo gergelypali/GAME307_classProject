@@ -1,6 +1,7 @@
 #include "Scene1.h"
 #include "StaticNPC.h"
 #include "KinematicSteeringOutput.h"
+#include "Circle.h"
 
 Scene1::Scene1(SDL_Window* sdlWindow_, GameManager* game_){
 	window = sdlWindow_;
@@ -21,7 +22,6 @@ Scene1::~Scene1(){
 }
 
 bool Scene1::OnCreate() {
-	int w, h;
 	SDL_GetWindowSize(window,&w,&h);
 	
 	Matrix4 ndc = MMath::viewportNDC(w, h);
@@ -50,28 +50,49 @@ bool Scene1::OnCreate() {
 	}
 
 	// static body Clyde part
-	Body* statiClydeBody = new Body(Vec3{ 25,25,0 }, Vec3{}, Vec3{}, 0, 0, 0.0f, 0, 0, 5.0f, 0, 90.0f, 0);
+	Body* statiClydeBody = new Body(Vec3{ 25,25,0 }, Vec3{}, Vec3{}, 0, 0, 0.0f, 0, 0, 50.0f, 0, 90.0f, 0);
 	SDL_Texture* clydeTexture = SDL_CreateTextureFromSurface(renderer, IMG_Load("Clyde.png"));
 	statiClyde = std::make_unique<StaticNPC>(this, statiClydeBody, clydeTexture, 0.15f);
+	npcVector.push_back(statiClyde.get());
 
 	// dynamic body Clyde part
-	Body* dynamiClydeBody = new Body(Vec3{ 25,25,0 }, Vec3{}, Vec3{}, 0, 0, 0.0f, 0, 0, 50.0f, 100.0f, 90.0f, 180.0f);
+	Body* dynamiClydeBody = new Body(Vec3{ float(w)/2,25,0 }, Vec3{}, Vec3{}, 0, 0, 0.0f, 0, 0, 50.0f, 40.0f, 90.0f, 180.0f);
 	dynamiClyde = std::make_unique<DynamicNPC>(this, dynamiClydeBody, clydeTexture, 0.15f);
+	npcVector.push_back(dynamiClyde.get());
+
+	// create more dynamic bodies so I can showcase the separation function also
+	Body* dynamiClydeBody2 = new Body(Vec3{ float(w) / 2 + 40,25,0 }, Vec3{}, Vec3{}, 0, 0, 0.0f, 0, 0, 50.0f, 40.0f, 90.0f, 180.0f);
+	dynamiClyde2 = std::make_unique<DynamicNPC>(this, dynamiClydeBody2, clydeTexture, 0.15f);
+	npcVector.push_back(dynamiClyde2.get());
+
+	Body* dynamiClydeBody3 = new Body(Vec3{ float(w) / 2 - 40,25,0 }, Vec3{}, Vec3{}, 0, 0, 0.0f, 0, 0, 50.0f, 40.0f, 90.0f, 180.0f);
+	dynamiClyde3 = std::make_unique<DynamicNPC>(this, dynamiClydeBody3, clydeTexture, 0.15f);
+	npcVector.push_back(dynamiClyde3.get());
 
 	// end of character set ups
+
+	// Obstacle setup / circles
+	obstacleVector.push_back(new Circle{ w / 2, h / 2, 50 });
+	obstacleVector.push_back(new Circle{ w / 2 + 200, h / 2, 50 });
+	obstacleVector.push_back(new Circle{ w / 2 - 200, h / 2, 50 });
 
 	return true;
 }
 
-void Scene1::OnDestroy() {}
+void Scene1::OnDestroy() {
+	for (auto& oneC : obstacleVector)
+		delete oneC;
+}
 
 void Scene1::Update(const float deltaTime) {
 	// Calculate and apply any steering for npc's
-	//blinky->Update(deltaTime);
+	// blinky->Update(deltaTime);
 
 	statiClyde->Update(deltaTime);
 
 	dynamiClyde->Update(deltaTime);
+	dynamiClyde2->Update(deltaTime);
+	dynamiClyde3->Update(deltaTime);
 
 	// Update player
 	game->getPlayer()->Update(deltaTime);
@@ -86,9 +107,16 @@ void Scene1::Render() {
 	statiClyde->Render();
 
 	dynamiClyde->Render();
+	dynamiClyde2->Render();
+	dynamiClyde3->Render();
 
 	// render the player
 	game->RenderPlayer(0.10f);
+
+	// draw obstacles with white color
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0);
+	for (auto& oneC : obstacleVector)
+		oneC->Render(renderer);
 
 	SDL_RenderPresent(renderer);
 }
