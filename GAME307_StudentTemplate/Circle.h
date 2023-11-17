@@ -20,6 +20,7 @@ public:
 
 	void Render(SDL_Renderer* renderer);
 	collisionData GetCollision(MATH::Vec3 pos, MATH::Vec3 ray);
+	bool pointInObstacle(float x, float y);
 };
 
 #endif // !CIRCLE_H

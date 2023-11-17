@@ -16,6 +16,7 @@ class Obstacle
 public:
 	virtual void Render(SDL_Renderer* renderer) = 0;
 	virtual collisionData GetCollision(MATH::Vec3 pos, MATH::Vec3 ray) = 0;
+	virtual bool pointInObstacle(float x, float y) = 0;
 
 };
 

@@ -9,6 +9,9 @@
 #include "DynamicNPC.h"
 
 class Obstacle;
+class Grid;
+class GridGraph;
+class Pathfinder;
 
 using namespace MATH;
 class Scene1 : public Scene {
@@ -30,6 +33,13 @@ private:
 
 	std::vector<NPCInterface*> npcVector{};
 	std::vector<Obstacle*> obstacleVector{};
+
+	// variables for pathfinding
+	Grid* m_grid{ nullptr };
+	GridGraph* m_graph{ nullptr };
+	Pathfinder* m_pathFinder{ nullptr };
+	std::vector<int> m_resPath;
+	void calculatePath(int idx);
 
 public:
 	Scene1(SDL_Window* sdlWindow, GameManager* game_);

@@ -61,3 +61,9 @@ collisionData Circle::GetCollision(Vec3 pos, Vec3 ray)
 
 	return res;
 }
+
+bool Circle::pointInObstacle(float x, float y)
+{
+	// dont really care, so just false every time
+	return false;
+}
