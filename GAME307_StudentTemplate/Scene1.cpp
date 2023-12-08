@@ -160,9 +160,9 @@ void Scene1::Render() {
 	//blinky->render(0.15f);
 	//statiClyde->Render();
 
-	//dynamiClyde->Render();
-	//dynamiClyde2->Render();
-	//dynamiClyde3->Render();
+	dynamiClyde->Render();
+	dynamiClyde2->Render();
+	dynamiClyde3->Render();
 
 	// render the player
 	game->RenderPlayer(0.10f);

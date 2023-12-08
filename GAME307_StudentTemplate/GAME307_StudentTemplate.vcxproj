@@ -77,6 +77,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\GameDev\MathLibrary\include;C:\GameDev\SDL\include;$(SolutionDir)\GAME307_StudentTemplate;$(SolutionDir)\GAME307_StudentTemplate\Steering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -163,6 +164,7 @@
     <ClInclude Include="Body.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Circle.h" />
+    <ClInclude Include="DecisionTree.h" />
     <ClInclude Include="DynamicBehaviour.h" />
     <ClInclude Include="DynamicNPC.h" />
     <ClInclude Include="DynamicNPCBehaviour.h" />
@@ -173,16 +175,20 @@
     <ClInclude Include="KinematicBehaviour.h" />
     <ClInclude Include="KinematicSteeringOutput.h" />
     <ClInclude Include="NPC.h" />
+    <ClInclude Include="npcDecisionTree.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Pathfinder.h" />
     <ClInclude Include="PlayerBody.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Scene1.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StaticNPC.h" />
     <ClInclude Include="Steering\KinematicBody.h" />
     <ClInclude Include="Steering\SteeringOutput.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="npcStateMachine.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

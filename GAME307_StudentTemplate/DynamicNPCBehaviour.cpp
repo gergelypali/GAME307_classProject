@@ -2,10 +2,12 @@
 
 void DynamicNPCBehaviour::Update(Body* targetBody, Body* charBody)
 {
+	auto resA = tree->makeDecision(targetBody, charBody);
+	//auto resA = stateM->Update(targetBody, charBody);
 	auto resAr{ dynamicSeek(targetBody, charBody) };
-	charBody->setAcceleration(resAr.acceleration);
+	charBody->setAcceleration(resA.acceleration);
 	auto resAl{ dynamicLookWhereYoureGoing(targetBody, charBody) };
-	charBody->setAngular(resAl.angularAccel);
+	charBody->setAngular(resA.angularAccel);
 }
 
 void DynamicNPCBehaviour::Update(std::vector<NPCInterface*> npcVector, Body* charBody)

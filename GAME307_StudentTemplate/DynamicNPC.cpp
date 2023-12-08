@@ -5,9 +5,9 @@ void DynamicNPC::Update(float deltaTime)
 	// update the NPC's movement based on the player's state
 	m_behaviour->Update(m_currentScene->game->getPlayer(), m_body);
 	// upadte the NPC's movement based on the other NPC's state
-	m_behaviour->Update(m_currentScene->getNPCVector(), m_body);
+	//m_behaviour->Update(m_currentScene->getNPCVector(), m_body);
 	// upadte the NPC's movement based on the obstacles
-	m_behaviour->Update(m_currentScene->getObstacleVector(), m_body);
+	//m_behaviour->Update(m_currentScene->getObstacleVector(), m_body);
 
 	// update method for an only static/kinematic body
 	m_body->setPos(m_body->getPos() + m_body->getVel() * deltaTime);
