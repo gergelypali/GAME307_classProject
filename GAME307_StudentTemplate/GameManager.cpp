@@ -1,5 +1,7 @@
 #include "GameManager.h"
 #include "Scene1.h"
+#include "Scene2.h"
+#include "Scene3.h"
 
 GameManager::GameManager() {
 	windowPtr = nullptr;
@@ -11,11 +13,7 @@ GameManager::GameManager() {
 }
 
 bool GameManager::OnCreate() {
-    // My display is 1920 x 1080 but the following seems to work best to fill the screen.
-    //const int SCREEN_WIDTH = 1540;
-    //const int SCREEN_HEIGHT = 860;
-
-    // Use 1000x600 for less than full screen
+    // Use 1000x750 for less than full screen
     const int SCREEN_WIDTH = 1000;
     const int SCREEN_HEIGHT = 750;
 
@@ -151,6 +149,12 @@ void GameManager::handleEvents()
                     case SDL_SCANCODE_1:
                         LoadScene( 1 );
                         break;
+                    case SDL_SCANCODE_2:
+                        LoadScene(2);
+                        break;
+                    case SDL_SCANCODE_3:
+                        LoadScene(3);
+                        break;
                     default:
                         break;
                 }
@@ -200,6 +204,12 @@ void GameManager::LoadScene( int i )
     {
         case 1:
             currentScene = new Scene1( windowPtr->GetSDL_Window(), this);
+            break;
+        case 2:
+            currentScene = new Scene2(windowPtr->GetSDL_Window(), this);
+            break;
+        case 3:
+            currentScene = new Scene3(windowPtr->GetSDL_Window(), this);
             break;
         default:
             currentScene = new Scene1( windowPtr->GetSDL_Window(), this );

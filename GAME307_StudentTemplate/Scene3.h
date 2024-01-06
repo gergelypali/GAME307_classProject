@@ -1,16 +1,15 @@
-#ifndef SCENE1_H
-#define SCENE1_H
+#ifndef SCENE3_H
+#define SCENE3_H
 
 #include <MMath.h>
 #include <VMath.h>
 #include "Scene.h"
-#include "Character.h"
-#include "StaticNPC.h"
 
-class Scene1DynamicNPC;
+class Scene3DynamicNPCTree;
+class Scene3DynamicNPCSM;
 
 using namespace MATH;
-class Scene1 : public Scene {
+class Scene3 : public Scene {
 private:
 	SDL_Window *window;
 	int w, h;
@@ -20,19 +19,12 @@ private:
 	Matrix4 projectionMatrix;
     Matrix4 inverseProjection;
 
-	Character* blinky;
-
-	std::unique_ptr<StaticNPC>statiClyde{nullptr};
-	std::unique_ptr<Scene1DynamicNPC>dynamiClyde{nullptr};
-	std::unique_ptr<Scene1DynamicNPC>dynamiClyde2{nullptr};
-	std::unique_ptr<Scene1DynamicNPC>dynamiClyde3{nullptr};
-
-	std::vector<NPCInterface*> npcVector{};
-	std::vector<Obstacle*> obstacleVector{};
+	std::unique_ptr<Scene3DynamicNPCTree>dynamiClyde{nullptr};
+	std::unique_ptr<Scene3DynamicNPCSM>dynamiClyde2{nullptr};
 
 public:
-	Scene1(SDL_Window* sdlWindow, GameManager* game_);
-	~Scene1();
+	Scene3(SDL_Window* sdlWindow, GameManager* game_);
+	~Scene3();
 	bool OnCreate();
 	void OnDestroy();
 	void Update(const float time);
@@ -44,8 +36,8 @@ public:
     Matrix4 getProjectionMatrix() { return projectionMatrix; }
 	Matrix4 getInverseMatrix() { return inverseProjection; }
 	SDL_Renderer* getRenderer() { return renderer; }
-	std::vector<NPCInterface*> getNPCVector() { return npcVector; }
-	std::vector<Obstacle*> getObstacleVector() { return obstacleVector; }
+	std::vector<NPCInterface*> getNPCVector() { return std::vector<NPCInterface*>{}; }
+	std::vector<Obstacle*> getObstacleVector() { return std::vector<Obstacle*>{}; }
 };
 
 #endif
