@@ -12,6 +12,9 @@ _Used literacy: Artificial Intelligence for Games by Ian Millington_
 
 ### Steering
 See Scene1 for demo.<br />
+<picture>
+  <img alt="Demo of Scene1." src="https://github.com/gergelypali/GAME307_classProject/blob/master/Gifs/scene1.gif">
+</picture><br />
 There are quite a few functions for steering from the kinematic or dynamic side.<br /> Just a few example:
 + Seek - kinematic / dynamic
 + Arrive - kinematic / dynamic
@@ -28,6 +31,9 @@ To demonstrate I created one kinematic NPC that chases the player and three dyna
 
 ### Pathfinding
 See Scene2 for demo.<br />
+<picture>
+  <img alt="Demo of Scene1." src="https://github.com/gergelypali/GAME307_classProject/blob/master/Gifs/scene2.gif">
+</picture><br />
 Three pathfindig algorithms implemented:
 + Breadth first search
 + Greedy search
@@ -37,5 +43,8 @@ To visualize the functionality I created a grid representation of the game scree
 
 ### Decision Making
 See Scene3 for demo.<br />
+<picture>
+  <img alt="Demo of Scene1." src="https://github.com/gergelypali/GAME307_classProject/blob/master/Gifs/scene3.gif">
+</picture><br />
 I implemented a state machine and a decision tree solution. Both of them are classes that should be used to create our own decision making algorithm for the given NPC.<br />
 Demonstration contains two NPCs, one with a state machine and one with a decision tree. The used steering functions are similar for these two to showcase that both implementation's result can be the same.
